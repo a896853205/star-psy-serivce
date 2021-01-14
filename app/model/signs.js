@@ -1,19 +1,12 @@
 module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
-  const User = app.model.define('users', {
+  const Sign = app.model.define('signs', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-    openId: STRING(36),
     name: STRING(30),
-    year: INTEGER,
-    month: INTEGER,
-    day: INTEGER,
-    hour: INTEGER,
-    minute: INTEGER,
-    timeZone: INTEGER,
     createdAt: DATE,
     updatedAt: DATE,
   });
 
-  return User;
+  return Sign;
 };

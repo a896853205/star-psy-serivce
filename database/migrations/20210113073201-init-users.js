@@ -10,10 +10,16 @@ module.exports = {
 
     await queryInterface.createTable('users', {
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
+      openId: STRING(36),
       name: STRING(30),
-      age: INTEGER,
-      created_at: DATE,
-      updated_at: DATE,
+      year: INTEGER,
+      month: INTEGER,
+      day: INTEGER,
+      hour: INTEGER,
+      minute: INTEGER,
+      timeZone: INTEGER,
+      createdAt: DATE,
+      updatedAt: DATE,
     });
   },
 
