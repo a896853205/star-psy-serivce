@@ -1,10 +1,13 @@
-const { localDBKey } = require('../key.js');
+const { localDBKey } = require("../key.js");
 
 exports.sequelize = {
-  dialect: 'mysql',
-  host: '127.0.0.1',
+  dialect: "mysql",
+  host: "127.0.0.1",
   port: 3306,
-  database: 'star-psy',
-  user: 'root',
+  database: "star-psy",
+  user: "root",
   password: localDBKey,
+  define: {
+    timestamps: false,
+  },
 };

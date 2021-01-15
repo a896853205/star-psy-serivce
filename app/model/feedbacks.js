@@ -1,7 +1,7 @@
 module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
-  const Feedback = app.model.define('feedbacks', {
+  const Feedback = app.model.define("feedbacks", {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     descriptionId: INTEGER,
     userId: INTEGER,
@@ -11,15 +11,15 @@ module.exports = app => {
   });
 
   Feedback.associate = () => {
-    app.model.Feedback.belongsTo(app.model.Description, {
-      foreignKey: 'descriptionId',
-      target: 'id',
-      as: 'feedbackDescription',
+    app.model.Feedbacks.belongsTo(app.model.Descriptions, {
+      foreignKey: "descriptionId",
+      target: "id",
+      type: INTEGER,
     });
-    app.model.Feedback.belongsTo(app.model.User, {
-      foreignKey: 'userId',
-      target: 'id',
-      as: 'feedbackUser',
+    app.model.Feedbacks.belongsTo(app.model.Users, {
+      foreignKey: "userId",
+      target: "id",
+      type: INTEGER,
     });
   };
   return Feedback;

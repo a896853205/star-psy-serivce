@@ -9,9 +9,13 @@
   "dependencies": {
     "babel-eslint": "^10.1.0",
     "egg": "^2.15.1",
+    "egg-cors": "^2.2.3",
+    "egg-passport": "^2.1.1",
     "egg-scripts": "^2.11.0",
     "egg-sequelize": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
+    "passport-jwt": "^4.0.0",
     "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
