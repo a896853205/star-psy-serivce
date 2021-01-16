@@ -5,5 +5,5 @@ module.exports = app => {
   const { router, controller } = app;
 
   router.get('/', controller.home.index);
-  app.router.get('/authortion', controller.managerUsers.authortion);
+  router.get('/authortion', controller.managerUsers.authortion);
 };
