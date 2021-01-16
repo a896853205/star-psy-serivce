@@ -7,23 +7,22 @@ class ManagerUsersController extends Controller {
   async authortion() {
     const { ctx } = this;
     const { password } = ctx.query;
-
+    if (!password) {
+      ctx.status = 400;
+      return;
+    }
     const managerUsers = await this.ctx.service.managerUsers.findManagerUsersByPassword(
       password
     );
-
     if (managerUsers) {
       const params = { id: managerUsers.id, nickname: managerUsers.name };
-
       // jwt生成token
       const jwtToken = await ctx.service.token.createToken(params);
       ctx.body = {
         token: jwtToken,
       };
     } else {
-      ctx.body = {
-        message: '密码错误',
-      };
+      console.log('查找失败');
     }
   }
 }

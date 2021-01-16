@@ -5,9 +5,10 @@ const Service = require('egg').Service;
 
 class ManagerUsersService extends Service {
   async findManagerUsersByPassword(password) {
-    return await this.ctx.model.ManagerUsers.findOne({
+    const managerUsers = await this.ctx.model.ManagerUsers.findOne({
       where: { password },
     });
+    return managerUsers;
   }
 }
 
