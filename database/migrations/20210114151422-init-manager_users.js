@@ -1,3 +1,8 @@
+const timestamps = {
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     /**
@@ -15,9 +20,18 @@ module.exports = {
       createdAt: DATE,
       updatedAt: DATE,
     });
+
+    queryInterface.bulkInsert('manager_users', [
+      {
+        id: 1,
+        name: 'admin',
+        password: 'e10adc3949ba59abbe56e057f20f883e',
+        ...timestamps,
+      },
+    ]);
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async queryInterface => {
     /**
      * Add reverting commands here.
      *

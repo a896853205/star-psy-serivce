@@ -1,3 +1,9 @@
+const descriptions = require('./descriptions.json');
+const timestamps = {
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     /**
@@ -6,7 +12,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    const { INTEGER, STRING, DATE } = Sequelize;
+    const { INTEGER, TEXT, DATE } = Sequelize;
 
     await queryInterface.createTable('descriptions', {
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -28,10 +34,19 @@ module.exports = {
           key: 'id',
         },
       },
-      description: STRING(30),
+      description: TEXT,
       createdAt: DATE,
       updatedAt: DATE,
     });
+
+    for (let i = 0; i < descriptions.length; i++) {
+      descriptions[i] = {
+        ...timestamps,
+        ...descriptions[i],
+      };
+    }
+
+    await queryInterface.bulkInsert('descriptions', descriptions);
   },
 
   down: async (queryInterface, Sequelize) => {

@@ -5,20 +5,23 @@
     "password": "a896",
     "database": "star-psy",
     "host": "localhost",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+08:00"
   },
   "test": {
     "username": "root",
     "password": "a896",
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+08:00"
   },
   "production": {
     "username": "root",
     "password": "a896",
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "+08:00"
   }
 }
