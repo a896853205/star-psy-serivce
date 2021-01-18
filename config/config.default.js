@@ -1,3 +1,4 @@
+const Result = require('../app/util/result');
 /* eslint valid-jsdoc: "off" */
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -7,10 +8,29 @@ module.exports = appInfo => {
    * built-in config
    * @type {Egg.EggAppConfig}
    **/
-  const config = (exports = {});
+  const config = (exports = {
+    onerror: {
+      accepts: () => 'json',
+      json(err, ctx) {
+        if (err.code === 'invalid_param') {
+          ctx.status = 400;
+
+          if (!ctx.body) {
+            ctx.body = new Result(undefined, '参数不合法');
+            return;
+          }
+
+          if (!ctx.body.msg) {
+            ctx.body = new Result(undefined, '参数不合法');
+            return;
+          }
+        }
+      },
+    },
+  });
 
   // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + "_1610517627948_427";
+  config.keys = appInfo.name + '_1610517627948_427';
 
   // add your middleware config here
   config.middleware = [];
@@ -28,8 +48,8 @@ module.exports = appInfo => {
   };
 
   config.cors = {
-    origin: "*", // 跨任何域
-    allowMethods: "GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS", // 被允许的请求方式
+    origin: '*', // 跨任何域
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS', // 被允许的请求方式
   };
 
   return {

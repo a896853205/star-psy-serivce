@@ -6,4 +6,6 @@ module.exports = app => {
 
   router.get('/', controller.home.index);
   router.get('/authortion', controller.managerUsers.authortion);
+
+  router.get('/description', controller.descriptions.descriptions);
 };
