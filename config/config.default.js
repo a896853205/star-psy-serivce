@@ -1,4 +1,5 @@
-const Result = require('../app/util/result');
+const Result = require('../app/util/result'),
+  { tokenSecret } = require('../key');
 /* eslint valid-jsdoc: "off" */
 /**
  * @param {Egg.EggAppInfo} appInfo app info
@@ -25,6 +26,14 @@ module.exports = appInfo => {
             return;
           }
         }
+
+        if (err.name === 'AuthenticationError') {
+          ctx.status = err.status;
+          ctx.body = new Result(undefined, '请重新登录');
+          return;
+        }
+
+        ctx.status = 500;
       },
     },
   });
@@ -50,6 +59,10 @@ module.exports = appInfo => {
   config.cors = {
     origin: '*', // 跨任何域
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS', // 被允许的请求方式
+  };
+
+  config.passportJwt = {
+    secret: tokenSecret,
   };
 
   return {

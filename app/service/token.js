@@ -1,6 +1,6 @@
 const Service = require('egg').Service;
 const jwt = require('jsonwebtoken');
-const { tokenSecret } = require('../../key.js');
+const { tokenSecret } = require('../../key');
 
 class TokenService extends Service {
   /**
@@ -8,7 +8,7 @@ class TokenService extends Service {
    * @param {object} params 加密对象
    */
   async createToken(params) {
-    return jwt.sign(params, tokenSecret);
+    return jwt.sign(params, tokenSecret, { expiresIn: 36000 });
   }
 }
 
