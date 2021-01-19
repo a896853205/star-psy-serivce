@@ -7,11 +7,15 @@ class ManagerUsersController extends Controller {
    * 用户授权获取token
    */
   async authortion() {
-    const { ctx } = this;
+    const { ctx, app } = this;
     const { password } = ctx.query;
-
-    // FIXME: egg有自带的参数判断,这样的判断会有弊端(0, null, '')都为false
-    if (!password) {
+    const errors = app.validator.validate(
+      {
+        password: { type: 'password', require: true, allowEmpty: false },
+      },
+      ctx.query
+    );
+    if (errors) {
       ctx.status = 400;
       ctx.body = new Result(undefined, '请输入密码');
     } else {

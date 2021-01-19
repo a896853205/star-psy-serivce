@@ -8,4 +8,5 @@ module.exports = app => {
   router.get('/authortion', controller.managerUsers.authortion);
 
   router.get('/description', controller.descriptions.descriptions);
+  router.get('/statistic', controller.feedback.statistic);
 };
