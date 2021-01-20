@@ -7,17 +7,6 @@ module.exports = app => {
     createdAt: DATE,
     updatedAt: DATE,
   });
-  
-  // Sign.associate = () => {
-  //   app.model.Signs.hasOne(app.model.Descriptions, {
-  //     foreignKey: 'sunSign',
-  //     sourceKey: 'id',
-  //   });
-  //   app.model.Signs.hasOne(app.model.Descriptions, {
-  //     foreignKey: 'moonSign',
-  //     sourceKey: 'id',
-  //   });
-  // };
 
   return Sign;
 };

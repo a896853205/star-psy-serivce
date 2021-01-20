@@ -11,7 +11,6 @@ module.exports = app => {
   });
 
   Description.associate = () => {
-    console.dir();
     app.model.Descriptions.belongsTo(app.model.Signs, {
       foreignKey: 'moonSign',
       as: 'moonSignI'
