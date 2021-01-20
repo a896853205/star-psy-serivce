@@ -8,7 +8,7 @@ class TokenService extends Service {
    * @param {object} params 加密对象
    */
   async createToken(params) {
-    return jwt.sign(params, tokenSecret, { expiresIn: 36000 });
+    return `Bearer ${jwt.sign(params, tokenSecret, { expiresIn: 36000 })}`;
   }
 }
 
