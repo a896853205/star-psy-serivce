@@ -22,12 +22,12 @@ class FeedbackService extends Service {
 
   // 获取最低评价组合，以及最高评价组合
   async getEvaluation() {
-    let lowEvaluation = {
+    const lowEvaluation = {
       lowEvaluationMark: 0.0,
       lowSunSignName: '',
       lowMoonSignName: '',
     };
-    let topEvaluation = {
+    const topEvaluation = {
       topEvaluationMark: 0.0,
       topSunSignName: '',
       topMoonSignName: '',
@@ -42,7 +42,18 @@ class FeedbackService extends Service {
         {
           model: this.app.model.Descriptions,
           // arrtibutes: ['sunSignI', 'moonSignI'],
-          include: { model: this.app.model.Signs, attributes: ['name'] },
+          include: [
+            {
+              model: this.app.model.Signs,
+              attributes: ['name'],
+              as: 'moonSignI',
+            },
+            {
+              model: this.app.model.Signs,
+              attributes: ['name'],
+              as: 'sunSignI',
+            },
+          ],
         },
         /* {
           model: this.app.model.Descriptions,
@@ -133,7 +144,6 @@ class FeedbackService extends Service {
 
   /**
    * @description: 获取统计数据
-   * @param {null}
    * @return { todayIncrease, lowEvaluation, topEvaluation, sumEvaluation, avgEvaluation }
    */
   async findstatisticData() {
