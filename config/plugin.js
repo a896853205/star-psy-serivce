@@ -18,4 +18,8 @@ module.exports = {
     enable: true,
     package: 'egg-validate',
   },
+  passportJwt: {
+    enable: true,
+    package: 'egg-passport-jwt',
+  },
 };

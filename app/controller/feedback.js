@@ -6,7 +6,9 @@ class FeedbackController extends Controller {
    */
   async statistic() {
     const { ctx } = this;
+
     const statisticData = await this.ctx.service.feedback.findstatisticData();
+
     ctx.body = new Result({
       statisticData,
     });

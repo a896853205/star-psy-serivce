@@ -4,11 +4,24 @@
 const Service = require('egg').Service;
 const Sequelize = require('sequelize');
 class FeedbackService extends Service {
+<<<<<<< HEAD
   // 获取今日增加数
   async getTodayIncrease() {
     const Op = Sequelize.Op;
     const todayEarlyMorning = new Date().setHours(0, 0, 0, 0);
     console.log('今日凌晨时间为：', todayEarlyMorning);
+=======
+  /**
+   * 获取统计数据
+   * @returns
+   */
+  // FIXME: 这里最好给出@returns例子, 因为返回值实在太复杂, 然后可以拆分成函数, 三个函数呗, function1, function23, function4.
+  async findstatisticData() {
+    // FIXME: 使用Promise.all优化(可以优化的地方优化), 返回数据比较复杂, 可以在开头定义变量, 然后在后面慢慢填充.
+    const Op = Sequelize.Op;
+    // 获取今日增加数
+    const todayEarlyMorning = new Date().setHours(0, 0, 0, 0);
+>>>>>>> b2edf71bd86a5a80b8a7098aeb91ca26e1eae97d
     const todayIncrease = await this.ctx.model.Feedbacks.count({
       where: {
         createdAt: {
@@ -16,12 +29,17 @@ class FeedbackService extends Service {
         },
       },
     });
+<<<<<<< HEAD
     console.log('今日增加的访问数', todayIncrease);
     return todayIncrease;
   }
 
   // 获取最低评价组合，以及最高评价组合
   async getEvaluation() {
+=======
+
+    // 获取最低评价组合，以及最高评价组合
+>>>>>>> b2edf71bd86a5a80b8a7098aeb91ca26e1eae97d
     let lowEvaluation = {
       lowEvaluationMark: 0.0,
       lowSunSignName: '',
@@ -35,14 +53,25 @@ class FeedbackService extends Service {
     // FIXME: 这里永远等true ,因为是引用类型比较, 可以使用findAllAndCount, 然后使用这个count数进行判断.
     const { count, rows } = await this.ctx.model.Feedbacks.findAndCountAll({
       attributes: [
+<<<<<<< HEAD
         /* 'descriptionId', */
         [Sequelize.fn('AVG', Sequelize.col('mark')), 'groupMark'],
+=======
+        'descriptionId',
+        // FIXME: 驼峰
+        [Sequelize.fn('AVG', Sequelize.col('mark')), 'group_mark'],
+>>>>>>> b2edf71bd86a5a80b8a7098aeb91ca26e1eae97d
       ],
       include: [
         {
           model: this.app.model.Descriptions,
+<<<<<<< HEAD
           // arrtibutes: ['sunSignI', 'moonSignI'],
           include: { model: this.app.model.Signs, attributes: ['name'] },
+=======
+          arrtibutes: ['sunSign', 'moonSign'],
+          // FIXME: 还可以继续include省着后面再Signs.findOne
+>>>>>>> b2edf71bd86a5a80b8a7098aeb91ca26e1eae97d
         },
         /* {
           model: this.app.model.Descriptions,
@@ -64,6 +93,7 @@ class FeedbackService extends Service {
       distinct: true,
     });
 
+<<<<<<< HEAD
     console.log('这是加了两个fix之后的两个联表查询结果count', count);
     // console.log('这是加了两个fix之后的两个联表查询结果rows', rows);
     console.dir(rows);
@@ -80,6 +110,10 @@ class FeedbackService extends Service {
     ); */
 
     /* if (count.length !== 0 ) {
+=======
+    // FIXME: 这里永远等true ,因为是引用类型比较, 可以使用findAllAndCount, 然后使用这个count数进行判断.
+    if (results !== []) {
+>>>>>>> b2edf71bd86a5a80b8a7098aeb91ca26e1eae97d
       const { sunSign, moonSign } = results[0].dataValues.description;
       const lowSignGroup = results[0].dataValues.groupMark.toFixed(2);
       const { dataValues: lowSunSign } = await this.ctx.model.Signs.findOne({
@@ -122,6 +156,7 @@ class FeedbackService extends Service {
   async getEvaluationNumber() {
     const resultsData = await this.ctx.model.Feedbacks.findOne({
       attributes: [
+<<<<<<< HEAD
         [Sequelize.fn('SUM', Sequelize.col('mark')), 'sumMark'],
         [Sequelize.fn('AVG', Sequelize.col('mark')), 'avgMark'],
       ],
@@ -149,6 +184,17 @@ class FeedbackService extends Service {
       evaluationNumber
     );
     const statisticData = {
+=======
+        // FIXME: 驼峰
+        [Sequelize.fn('SUM', Sequelize.col('mark')), 'sum_mark'],
+        [Sequelize.fn('AVG', Sequelize.col('mark')), 'avg_mark'],
+      ],
+    });
+    const sumEvaluation = resultsData.dataValues.sum_mark;
+    const avgEvaluation = resultsData.dataValues.avg_mark.toFixed(2);
+
+    return {
+>>>>>>> b2edf71bd86a5a80b8a7098aeb91ca26e1eae97d
       todayIncrease,
       lowEvaluation: evaluation.lowEvaluation,
       topEvaluation: evaluation.topEvaluation,
