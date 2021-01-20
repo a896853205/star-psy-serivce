@@ -17,4 +17,5 @@ module.exports = app => {
     jwt,
     controller.descriptions.descriptions
   );
+  router.get('/statistic', controller.feedback.statistic);
 };

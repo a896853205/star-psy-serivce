@@ -22,6 +22,7 @@
     // 要求或禁止末尾逗号
     "comma-dangle": 0,
     // js语句结尾必须使用分号
-    "semi": [2]
+    "semi": [2],
+    "array-bracket-spacing": ["error", "never"]
   }
 }
