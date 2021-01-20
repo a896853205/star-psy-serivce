@@ -4,32 +4,37 @@
 const Service = require('egg').Service;
 const Sequelize = require('sequelize');
 class FeedbackService extends Service {
-  // 获取今日增加数
-  async getTodayIncrease() {
+  /**
+   * 今日增加数
+   */
+  async todayIncrease() {
     const Op = Sequelize.Op;
     const todayEarlyMorning = new Date().setHours(0, 0, 0, 0);
-    const todayIncrease = await this.ctx.model.Feedbacks.count({
+
+    return await this.ctx.model.Feedbacks.count({
       where: {
         createdAt: {
           [Op.gt]: todayEarlyMorning,
         },
       },
     });
-    console.log('今日增加的访问数', todayIncrease);
-    return todayIncrease;
   }
-  // 获取最低评价组合，以及最高评价组合
-  async getEvaluation() {
+
+  /**
+   * 最高组合平均数, 最低组合平均数
+   */
+  async topAndBottomEvaluation() {
     let lowEvaluation = {
-      lowEvaluationMark: 0.00,
-      lowSunSignName: '',
-      lowMoonSignName: '',
-    };
-    let topEvaluation = {
-      topEvaluationMark: 0.00,
-      topSunSignName: '',
-      topMoonSignName: '',
-    };
+        lowEvaluationMark: '0.00',
+        lowSunSignName: '--',
+        lowMoonSignName: '--',
+      },
+      topEvaluation = {
+        topEvaluationMark: '0.00',
+        topSunSignName: '--',
+        topMoonSignName: '--',
+      };
+
     const { count, rows } = await this.ctx.model.Feedbacks.findAndCountAll({
       attributes: [[Sequelize.fn('AVG', Sequelize.col('mark')), 'groupMark']],
       include: [
@@ -53,61 +58,77 @@ class FeedbackService extends Service {
       order: Sequelize.fn('AVG', Sequelize.col('mark')),
       distinct: true,
     });
+
     if (count.length !== 0) {
       // 获取最低评价数
-      const lowSign = rows[0].dataValues;
+      const lowSign = rows[0];
       const lowSignGroup = lowSign.groupMark.toFixed(2);
-      const lowSunSign = lowSign.Description.sunSignI.dataValues;
-      const lowMoonSign = lowSign.Description.moonSignI.dataValues;
+      const lowSunSign = lowSign.Description.sunSignI;
+      const lowMoonSign = lowSign.Description.moonSignI;
+
       lowEvaluation = {
         lowEvaluationMark: lowSignGroup,
         lowSunSignName: lowSunSign.name,
         lowMoonSignName: lowMoonSign.name,
       };
+
       // 获取最高评价数
-      const topSign = rows[count.length - 1].dataValues;
+      const topSign = rows[count.length - 1];
       const topSignGroup = topSign.groupMark.toFixed(2);
-      const topSunSign = topSign.Description.sunSignI.dataValues;
-      const topMoonSign = topSign.Description.moonSignI.dataValues;
+      const topSunSign = topSign.Description.sunSignI;
+      const topMoonSign = topSign.Description.moonSignI;
+
       topEvaluation = {
         topEvaluationMark: topSignGroup,
         topSunSignName: topSunSign.name,
         topMoonSignName: topMoonSign.name,
       };
     }
+
     return { topEvaluation, lowEvaluation };
   }
-  // 总评价分数，以及平均分数
-  async getEvaluationNumber() {
+
+  /**
+   *  总评价分数，以及平均分数
+   */
+  async totalEvaluation() {
     const resultsData = await this.ctx.model.Feedbacks.findOne({
       attributes: [
         [Sequelize.fn('SUM', Sequelize.col('mark')), 'sumMark'],
         [Sequelize.fn('AVG', Sequelize.col('mark')), 'avgMark'],
       ],
     });
-    const sumEvaluation = resultsData.dataValues.sumMark;
-    const avgEvaluation = resultsData.dataValues.avgMark.toFixed(2);
+
+    const sumEvaluation = resultsData.sumMark;
+    const avgEvaluation = resultsData.avgMark
+      ? resultsData.avgMark.toFixed(2)
+      : '';
+
     return { sumEvaluation, avgEvaluation };
   }
 
   /**
-   * @description: 获取统计数据
-   * @return { todayIncrease, lowEvaluation, topEvaluation, sumEvaluation, avgEvaluation }
+   * @description 获取统计数据
+   * @return { todayIncrease, lowEvaluation, topEvaluation, sumEvaluation, avgEvaluation } 今天增加数, 最低平均数, 最高平均数, 总数, 总平均数
    */
-  async findstatisticData() {
-    const [todayIncrease, evaluation, evaluationNumber] = await Promise.all([
-      this.getTodayIncrease(),
-      this.getEvaluation(),
-      this.getEvaluationNumber(),
-    ]);
-    const statisticData = {
+  async feedbackStatistic() {
+    const [
       todayIncrease,
-      lowEvaluation: evaluation.lowEvaluation,
-      topEvaluation: evaluation.topEvaluation,
-      sumEvaluation: evaluationNumber.sumEvaluation,
-      avgEvaluation: evaluationNumber.avgEvaluation,
+      topAndBottomEvaluation,
+      totalEvaluation,
+    ] = await Promise.all([
+      this.todayIncrease(),
+      this.topAndBottomEvaluation(),
+      this.totalEvaluation(),
+    ]);
+
+    return {
+      todayIncrease,
+      lowEvaluation: topAndBottomEvaluation.lowEvaluation,
+      topEvaluation: topAndBottomEvaluation.topEvaluation,
+      sumEvaluation: totalEvaluation.sumEvaluation,
+      avgEvaluation: totalEvaluation.avgEvaluation,
     };
-    return statisticData;
   }
 }
 
