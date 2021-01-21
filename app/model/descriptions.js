@@ -1,19 +1,22 @@
 module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
-  const Description = app.model.define('Descriptions', {
-    id: { type: INTEGER, primaryKey: true, autoIncrement: true },
-    sunSign: INTEGER,
-    moonSign: INTEGER,
-    description: STRING(30),
-    createdAt: DATE,
-    updatedAt: DATE,
-  });
+  const Description = app.model.define(
+    'Descriptions',
+    {
+      id: { type: INTEGER, primaryKey: true, autoIncrement: true },
+      sunSign: INTEGER,
+      moonSign: INTEGER,
+      description: STRING(30),
+      createdAt: DATE,
+      updatedAt: DATE,
+    }
+  );
 
   Description.associate = () => {
     app.model.Descriptions.belongsTo(app.model.Signs, {
       foreignKey: 'moonSign',
-      as: 'moonSignI'
+      as: 'moonSignI',
     });
 
     app.model.Descriptions.belongsTo(app.model.Signs, {

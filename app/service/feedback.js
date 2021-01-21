@@ -57,13 +57,13 @@ class FeedbackService extends Service {
       group: 'descriptionId',
       order: Sequelize.fn('AVG', Sequelize.col('mark')),
       distinct: true,
+      raw: true,
     });
 
     if (count.length !== 0) {
       // 获取最低评价数
       const lowSign = rows[0];
-      console.log(lowSign);
-      const lowSignGroup = lowSign.dataValues.groupMark.toFixed(2);
+      const lowSignGroup = lowSign.groupMark.toFixed(2);
       const lowSunSignName = lowSign.Description.sunSignI.name;
       const lowMoonSignName = lowSign.Description.moonSignI.name;
       lowEvaluation = {
@@ -74,7 +74,7 @@ class FeedbackService extends Service {
 
       // 获取最高评价数
       const topSign = rows[count.length - 1];
-      const topSignGroup = topSign.dataValues.groupMark.toFixed(2);
+      const topSignGroup = topSign.groupMark.toFixed(2);
       const topSunSignName = topSign.Description.sunSignI.name;
       const topMoonSignName = topSign.Description.moonSignI.name;
       topEvaluation = {
