@@ -12,10 +12,6 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.get('/authortion', controller.managerUsers.authortion);
 
-  router.get(
-    '/description',
-    jwt,
-    controller.descriptions.descriptions
-  );
-  router.get('/statistic', controller.feedback.statistic);
+  router.get('/description', jwt, controller.descriptions.descriptions);
+  router.get('/statistic', jwt, controller.feedback.statistic);
 };

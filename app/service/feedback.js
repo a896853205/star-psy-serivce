@@ -5,83 +5,79 @@ const Service = require('egg').Service;
 const Sequelize = require('sequelize');
 class FeedbackService extends Service {
   /**
-   * 获取统计数据
-   * @returns
+   * 今日增加数
    */
-  // FIXME: 这里最好给出@returns例子, 因为返回值实在太复杂, 然后可以拆分成函数, 三个函数呗, function1, function23, function4.
-  async findstatisticData() {
-    // FIXME: 使用Promise.all优化(可以优化的地方优化), 返回数据比较复杂, 可以在开头定义变量, 然后在后面慢慢填充.
+  async todayIncrease() {
     const Op = Sequelize.Op;
-    // 获取今日增加数
     const todayEarlyMorning = new Date().setHours(0, 0, 0, 0);
-    const todayIncrease = await this.ctx.model.Feedbacks.count({
+
+    return await this.ctx.model.Feedbacks.count({
       where: {
         createdAt: {
           [Op.gt]: todayEarlyMorning,
         },
       },
     });
+  }
 
-    // 获取最低评价组合，以及最高评价组合
+  /**
+   * 最高组合平均数, 最低组合平均数
+   */
+  async topAndBottomEvaluation() {
     let lowEvaluation = {
-      lowEvaluationMark: 0.0,
-      lowSunSignName: '',
-      lowMoonSignName: '',
-    };
-    let topEvaluation = {
-      topEvaluationMark: 0.0,
-      topSunSignName: '',
-      topMoonSignName: '',
-    };
-    const results = await this.ctx.model.Feedbacks.findAll({
-      attributes: [
-        'descriptionId',
-        // FIXME: 驼峰
-        [Sequelize.fn('AVG', Sequelize.col('mark')), 'group_mark'],
-      ],
+        lowEvaluationMark: '0.00',
+        lowSunSignName: '--',
+        lowMoonSignName: '--',
+      },
+      topEvaluation = {
+        topEvaluationMark: '0.00',
+        topSunSignName: '--',
+        topMoonSignName: '--',
+      };
+
+    const { count, rows } = await this.ctx.model.Feedbacks.findAndCountAll({
+      attributes: [[Sequelize.fn('AVG', Sequelize.col('mark')), 'groupMark']],
       include: [
         {
           model: this.app.model.Descriptions,
-          arrtibutes: ['sunSign', 'moonSign'],
-          // FIXME: 还可以继续include省着后面再Signs.findOne
+          include: [
+            {
+              model: this.app.model.Signs,
+              attributes: ['name'],
+              as: 'moonSignI',
+            },
+            {
+              model: this.app.model.Signs,
+              attributes: ['name'],
+              as: 'sunSignI',
+            },
+          ],
         },
       ],
       group: 'descriptionId',
       order: Sequelize.fn('AVG', Sequelize.col('mark')),
+      distinct: true,
     });
 
-    // FIXME: 这里永远等true ,因为是引用类型比较, 可以使用findAllAndCount, 然后使用这个count数进行判断.
-    if (results !== []) {
-      const { sunSign, moonSign } = results[0].dataValues.description;
-      const lowSignGroup = results[0].dataValues.group_mark.toFixed(2);
-      const { dataValues: lowSunSign } = await this.ctx.model.Signs.findOne({
-        where: { id: sunSign },
-        attributes: ['name'],
-      });
-      const { dataValues: lowMoonSign } = await this.ctx.model.Signs.findOne({
-        where: { id: moonSign },
-        attributes: ['name'],
-      });
+    if (count.length !== 0) {
+      // 获取最低评价数
+      const lowSign = rows[0];
+      const lowSignGroup = lowSign.groupMark.toFixed(2);
+      const lowSunSign = lowSign.Description.sunSignI;
+      const lowMoonSign = lowSign.Description.moonSignI;
+
       lowEvaluation = {
         lowEvaluationMark: lowSignGroup,
         lowSunSignName: lowSunSign.name,
         lowMoonSignName: lowMoonSign.name,
       };
+
       // 获取最高评价数
-      const { sunSign: topSunSignId, moonSign: topMoonSignId } = results[
-        results.length - 1
-      ].dataValues.description;
-      const topSignGroup = results[
-        results.length - 1
-      ].dataValues.group_mark.toFixed(2);
-      const { dataValues: topSunSign } = await this.ctx.model.Signs.findOne({
-        where: { id: topSunSignId },
-        attributes: ['name'],
-      });
-      const { dataValues: topMoonSign } = await this.ctx.model.Signs.findOne({
-        where: { id: topMoonSignId },
-        arrtibutes: ['name'],
-      });
+      const topSign = rows[count.length - 1];
+      const topSignGroup = topSign.groupMark.toFixed(2);
+      const topSunSign = topSign.Description.sunSignI;
+      const topMoonSign = topSign.Description.moonSignI;
+
       topEvaluation = {
         topEvaluationMark: topSignGroup,
         topSunSignName: topSunSign.name,
@@ -89,23 +85,49 @@ class FeedbackService extends Service {
       };
     }
 
-    // 总评价分数，以及平均分数
+    return { topEvaluation, lowEvaluation };
+  }
+
+  /**
+   *  总评价分数，以及平均分数
+   */
+  async totalEvaluation() {
     const resultsData = await this.ctx.model.Feedbacks.findOne({
       attributes: [
-        // FIXME: 驼峰
-        [Sequelize.fn('SUM', Sequelize.col('mark')), 'sum_mark'],
-        [Sequelize.fn('AVG', Sequelize.col('mark')), 'avg_mark'],
+        [Sequelize.fn('SUM', Sequelize.col('mark')), 'sumMark'],
+        [Sequelize.fn('AVG', Sequelize.col('mark')), 'avgMark'],
       ],
     });
-    const sumEvaluation = resultsData.dataValues.sum_mark;
-    const avgEvaluation = resultsData.dataValues.avg_mark.toFixed(2);
+
+    const sumEvaluation = resultsData.sumMark;
+    const avgEvaluation = resultsData.avgMark
+      ? resultsData.avgMark.toFixed(2)
+      : '';
+
+    return { sumEvaluation, avgEvaluation };
+  }
+
+  /**
+   * @description 获取统计数据
+   * @return { todayIncrease, lowEvaluation, topEvaluation, sumEvaluation, avgEvaluation } 今天增加数, 最低平均数, 最高平均数, 总数, 总平均数
+   */
+  async feedbackStatistic() {
+    const [
+      todayIncrease,
+      topAndBottomEvaluation,
+      totalEvaluation,
+    ] = await Promise.all([
+      this.todayIncrease(),
+      this.topAndBottomEvaluation(),
+      this.totalEvaluation(),
+    ]);
 
     return {
       todayIncrease,
-      lowEvaluation,
-      topEvaluation,
-      sumEvaluation,
-      avgEvaluation,
+      lowEvaluation: topAndBottomEvaluation.lowEvaluation,
+      topEvaluation: topAndBottomEvaluation.topEvaluation,
+      sumEvaluation: totalEvaluation.sumEvaluation,
+      avgEvaluation: totalEvaluation.avgEvaluation,
     };
   }
 }
