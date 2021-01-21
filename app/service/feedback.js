@@ -62,26 +62,25 @@ class FeedbackService extends Service {
     if (count.length !== 0) {
       // 获取最低评价数
       const lowSign = rows[0];
-      const lowSignGroup = lowSign.groupMark.toFixed(2);
-      const lowSunSign = lowSign.Description.sunSignI;
-      const lowMoonSign = lowSign.Description.moonSignI;
-
+      console.log(lowSign);
+      const lowSignGroup = lowSign.dataValues.groupMark.toFixed(2);
+      const lowSunSignName = lowSign.Description.sunSignI.name;
+      const lowMoonSignName = lowSign.Description.moonSignI.name;
       lowEvaluation = {
         lowEvaluationMark: lowSignGroup,
-        lowSunSignName: lowSunSign.name,
-        lowMoonSignName: lowMoonSign.name,
+        lowSunSignName,
+        lowMoonSignName,
       };
 
       // 获取最高评价数
       const topSign = rows[count.length - 1];
-      const topSignGroup = topSign.groupMark.toFixed(2);
-      const topSunSign = topSign.Description.sunSignI;
-      const topMoonSign = topSign.Description.moonSignI;
-
+      const topSignGroup = topSign.dataValues.groupMark.toFixed(2);
+      const topSunSignName = topSign.Description.sunSignI.name;
+      const topMoonSignName = topSign.Description.moonSignI.name;
       topEvaluation = {
         topEvaluationMark: topSignGroup,
-        topSunSignName: topSunSign.name,
-        topMoonSignName: topMoonSign.name,
+        topSunSignName,
+        topMoonSignName,
       };
     }
 
@@ -97,6 +96,7 @@ class FeedbackService extends Service {
         [Sequelize.fn('SUM', Sequelize.col('mark')), 'sumMark'],
         [Sequelize.fn('AVG', Sequelize.col('mark')), 'avgMark'],
       ],
+      raw: true,
     });
 
     const sumEvaluation = resultsData.sumMark;
@@ -128,6 +128,18 @@ class FeedbackService extends Service {
       topEvaluation: topAndBottomEvaluation.topEvaluation,
       sumEvaluation: totalEvaluation.sumEvaluation,
       avgEvaluation: totalEvaluation.avgEvaluation,
+    };
+  }
+
+  /**
+   * @description: 获取星座图表顺序
+   * @param {*}
+   * @return {*}
+   */
+  async feedbackChart() {
+    let chartData = {
+      sunSignList: ['sunSign'],
+      moonSignList: [], // [{moonSignName, groupMark}]
     };
   }
 }

@@ -11,6 +11,14 @@ class FeedbackController extends Controller {
 
     ctx.body = new Result(statisticData);
   }
+  /**
+   * 获取表格数据
+   */
+  async chart() {
+    const { ctx } = this;
+    const chartData = await this.ctx.service.feedback.feedbackChart();
+    ctx.body = new Result(chartData);
+  }
 }
 
 module.exports = FeedbackController;

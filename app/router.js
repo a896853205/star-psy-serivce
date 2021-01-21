@@ -14,4 +14,5 @@ module.exports = app => {
 
   router.get('/description', jwt, controller.descriptions.descriptions);
   router.get('/statistic', jwt, controller.feedback.statistic);
+  router.get('/chart', jwt, controller.feedback.chart);
 };
