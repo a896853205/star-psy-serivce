@@ -11,6 +11,8 @@ module.exports = app => {
     hour: INTEGER,
     minute: INTEGER,
     timeZone: INTEGER,
+    sunSign: INTEGER,
+    moonSign: INTEGER,
     createdAt: DATE,
     updatedAt: DATE,
   });
