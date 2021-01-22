@@ -10,12 +10,6 @@ module.exports = app => {
       mark: STRING(30),
       createdAt: DATE,
       updatedAt: DATE,
-    },
-    {
-      query: {
-        raw: true,
-        nest: true,
-      },
     }
   );
 
