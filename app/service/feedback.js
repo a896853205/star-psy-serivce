@@ -130,6 +130,18 @@ class FeedbackService extends Service {
       avgEvaluation: totalEvaluation.avgEvaluation,
     };
   }
+
+  /**
+   * 保存feedback
+   * @param {object} { userId, descriptionId, mark } 用户id, 描述id, 分数
+   */
+  async saveFeedback({ userId, descriptionId, mark }) {
+    return await this.ctx.model.Feedbacks.create({
+      userId,
+      descriptionId,
+      mark,
+    });
+  }
 }
 
 module.exports = FeedbackService;

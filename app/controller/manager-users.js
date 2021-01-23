@@ -15,6 +15,7 @@ class ManagerUsersController extends Controller {
       },
       ctx.query
     );
+
     if (errors) {
       ctx.status = 400;
       ctx.body = new Result(undefined, '请输入密码');
