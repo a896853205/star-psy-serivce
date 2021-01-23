@@ -65,7 +65,7 @@ class UsersController extends Controller {
       return;
     }
 
-    ctx.body = new Result(description);
+    ctx.body = new Result({ description, user: saveUserResult });
   }
 }
 
