@@ -6,6 +6,18 @@ class DescriptionsService extends Service {
       where: { sunSign, moonSign },
     });
   }
+  async descriptionUpdate(sunSignId, moonSignId, description) {
+    const updateResult = await this.ctx.model.Descriptions.update(
+      { description: description },
+      {
+        where: {
+          sunSign: sunSignId,
+          moonSign: moonSignId,
+        },
+      }
+    );
+    return updateResult;
+  }
 }
 
 module.exports = DescriptionsService;

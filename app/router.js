@@ -13,6 +13,6 @@ module.exports = app => {
   router.get('/authortion', controller.managerUsers.authortion);
 
   router.get('/description', jwt, controller.descriptions.descriptions);
+  router.get('/description/update', jwt, controller.descriptions.update);
   router.get('/statistic', jwt, controller.feedback.statistic);
-  router.get('/chart', jwt, controller.feedback.chart);
 };

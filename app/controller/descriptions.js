@@ -29,6 +29,45 @@ class DescriptionsController extends Controller {
 
     ctx.body = new Result(description);
   }
+  async update() {
+    const { ctx } = this;
+
+    ctx.validate(
+      {
+        description: { require, type: 'string', convertType: 'string' },
+        sunSignId: {
+          require,
+          type: 'int',
+          min: 0,
+          max: 11,
+          convertType: 'int',
+        },
+        moonSignId: {
+          require,
+          type: 'int',
+          min: 0,
+          max: 11,
+          convertType: 'int',
+        },
+      },
+      ctx.query
+    );
+
+    const { description, sunSignId, moonSignId } = ctx.query;
+    const updateResult = await this.ctx.service.descriptions.descriptionUpdate(
+      sunSignId,
+      moonSignId,
+      description
+    );
+
+    if (updateResult[0] < 1) {
+      ctx.status = 400;
+      ctx.body = new Result(undefined, '修改失败！');
+      return;
+    }
+
+    ctx.body = new Result(updateResult);
+  }
 }
 
 module.exports = DescriptionsController;
