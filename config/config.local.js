@@ -14,4 +14,7 @@ exports.sequelize = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
   },
+  query: {
+    nest: true,
+  },
 };
