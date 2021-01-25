@@ -136,11 +136,34 @@ class FeedbackService extends Service {
    * @param {object} { userId, descriptionId, mark } 用户id, 描述id, 分数
    */
   async saveFeedback({ userId, descriptionId, mark }) {
-    return await this.ctx.model.Feedbacks.create({
-      userId,
-      descriptionId,
-      mark,
+    const hasFeedback = await this.ctx.model.Feedbacks.count({
+      where: {
+        userId,
+        descriptionId,
+      },
     });
+
+    if (hasFeedback) {
+      await this.ctx.model.Feedbacks.update(
+        {
+          mark,
+        },
+        {
+          where: {
+            userId,
+            descriptionId,
+          },
+        }
+      );
+    } else {
+      await this.ctx.model.Feedbacks.create({
+        userId,
+        descriptionId,
+        mark,
+      });
+    }
+
+    return true;
   }
 
   /**

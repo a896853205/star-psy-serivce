@@ -35,6 +35,7 @@ class FeedbackController extends Controller {
     if (!feedbackResult) {
       ctx.status = 400;
       ctx.body = new Result(undefined, '参数不合法');
+      return;
     }
 
     ctx.body = new Result(undefined, '感谢反馈!');
