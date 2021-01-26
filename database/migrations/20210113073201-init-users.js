@@ -17,7 +17,7 @@ module.exports = {
       day: INTEGER,
       hour: INTEGER,
       minute: INTEGER,
-      timeZone: INTEGER,
+      timeZone: STRING(36),
       sunSign: INTEGER,
       moonSign: INTEGER,
       createdAt: DATE,

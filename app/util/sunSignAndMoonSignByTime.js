@@ -650,7 +650,7 @@ function calendar(y, m) {
 function moonxzget(oldday, oldhour, oldmin, sunxz) {
   /*牡羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯水瓶双鱼*/
   let sxz;
-  sxz = '牡羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯水瓶双鱼';
+  sxz = '白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯水瓶双鱼';
   let add;
   if (
     oldday > 29 ||
@@ -764,11 +764,12 @@ function moonxzget(oldday, oldhour, oldmin, sunxz) {
     raddc = addc;
   }
   let findex;
-  if (raddc + i > l) {
+  if (raddc + i >= l) {
     findex = (raddc + i) % l;
   } else {
     findex = raddc + i;
   }
+
   return sxz.substr(findex, 2);
 }
 
@@ -806,7 +807,7 @@ function getAstrov(m, d) {
  * @param {*} min 分
  */
 module.exports = function main(yyyy, month, day, hour, min) {
-  const cld = new calendar(yyyy, month);
+  const cld = new calendar(yyyy, month - 1);
   const d = day - 1;
   const sunSign = getAstrov(month, day);
 
