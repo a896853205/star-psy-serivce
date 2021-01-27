@@ -169,41 +169,43 @@ class FeedbackService extends Service {
   /**
    * @description: 获取星座图表数据
    * @return {Array} chartData 图表数据
-   */  
+   */
   async feedbackChart() {
-    let chartData = [];
-    let signName = [
+    const chartData = [];
+    const signName = [
       '白羊',
-      '金牛',
-      '双子',
-      '巨蟹',
       '狮子',
-      '处女',
-      '天秤',
-      '天蝎',
       '射手',
+      '金牛',
+      '处女',
       '摩羯',
+      '双子',
+      '天秤',
       '水瓶',
+      '巨蟹',
+      '天蝎',
       '双鱼',
     ];
+
     // 初始化chartData
-    for (let i = 0; i < 12; i++) {
-      chartData[i] = {
-        sunSign: signName[i],
-        白羊: 0.00,
-        金牛: 0.00,
-        双子: 0.00,
-        巨蟹: 0.00,
-        狮子: 0.00,
-        处女: 0.00,
-        天秤: 0.00,
-        天蝎: 0.00,
-        射手: 0.00,
-        摩羯: 0.00,
-        水瓶: 0.00,
-        双鱼: 0.00,
+    signName.forEach((signItem, index) => {
+      chartData[index] = {
+        sunSign: signItem,
+        白羊: '0.00',
+        狮子: '0.00',
+        射手: '0.00',
+        金牛: '0.00',
+        处女: '0.00',
+        摩羯: '0.00',
+        双子: '0.00',
+        天秤: '0.00',
+        水瓶: '0.00',
+        巨蟹: '0.00',
+        天蝎: '0.00',
+        双鱼: '0.00',
       };
-    }
+    });
+
     const { count, rows } = await this.ctx.model.Feedbacks.findAndCountAll({
       attributes: [[Sequelize.fn('AVG', Sequelize.col('mark')), 'groupMark']],
       include: [
@@ -227,14 +229,17 @@ class FeedbackService extends Service {
       distinct: true,
       raw: true,
     });
+
     if (count.length > 0) {
-      rows.map(item => {
-        let index = item.Description.sunSign - 1;
-        chartData[index][
-          item.Description.moonSignI.name
-        ] = item.groupMark.toFixed(2);
+      rows.forEach(item => {
+        const sunSignName = item.Description.sunSignI.name;
+        const chartItem = chartData.find(
+          chartItem => chartItem.sunSign === sunSignName
+        );
+        chartItem[item.Description.moonSignI.name] = item.groupMark.toFixed(2);
       });
     }
+
     return chartData;
   }
 }
