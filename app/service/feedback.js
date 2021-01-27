@@ -93,7 +93,7 @@ class FeedbackService extends Service {
   async totalEvaluation() {
     const resultsData = await this.ctx.model.Feedbacks.findOne({
       attributes: [
-        [Sequelize.fn('SUM', Sequelize.col('mark')), 'sumMark'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'sumMark'],
         [Sequelize.fn('AVG', Sequelize.col('mark')), 'avgMark'],
       ],
       raw: true,
@@ -167,13 +167,75 @@ class FeedbackService extends Service {
   }
 
   /**
-   * 获取星座图表顺序
-   */
+   * @description: 获取星座图表数据
+   * @return {Array} chartData 图表数据
+   */  
   async feedbackChart() {
-    let chartData = {
-      sunSignList: ['sunSign'],
-      moonSignList: [], // [{moonSignName, groupMark}]
-    };
+    let chartData = [];
+    let signName = [
+      '白羊',
+      '金牛',
+      '双子',
+      '巨蟹',
+      '狮子',
+      '处女',
+      '天秤',
+      '天蝎',
+      '射手',
+      '摩羯',
+      '水瓶',
+      '双鱼',
+    ];
+    // 初始化chartData
+    for (let i = 0; i < 12; i++) {
+      chartData[i] = {
+        sunSign: signName[i],
+        白羊: 0.00,
+        金牛: 0.00,
+        双子: 0.00,
+        巨蟹: 0.00,
+        狮子: 0.00,
+        处女: 0.00,
+        天秤: 0.00,
+        天蝎: 0.00,
+        射手: 0.00,
+        摩羯: 0.00,
+        水瓶: 0.00,
+        双鱼: 0.00,
+      };
+    }
+    const { count, rows } = await this.ctx.model.Feedbacks.findAndCountAll({
+      attributes: [[Sequelize.fn('AVG', Sequelize.col('mark')), 'groupMark']],
+      include: [
+        {
+          model: this.app.model.Descriptions,
+          include: [
+            {
+              model: this.app.model.Signs,
+              attributes: ['name'],
+              as: 'moonSignI',
+            },
+            {
+              model: this.app.model.Signs,
+              attributes: ['name'],
+              as: 'sunSignI',
+            },
+          ],
+        },
+      ],
+      group: 'descriptionId',
+      distinct: true,
+      raw: true,
+    });
+    if (count.length > 0) {
+      rows.map(item => {
+        let index = item.Description.sunSign - 1;
+        chartData[index][
+          item.Description.moonSignI.name
+        ] = item.groupMark.toFixed(2);
+      });
+    }
+    return chartData;
   }
 }
 

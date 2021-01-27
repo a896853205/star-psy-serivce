@@ -15,6 +15,7 @@ module.exports = app => {
   router.get('/description', jwt, controller.descriptions.descriptions);
   router.put('/description', jwt, controller.descriptions.update);
   router.get('/statistic', jwt, controller.feedback.statistic);
+  router.get('/chart', jwt, controller.feedback.chart);
 
   // 小程序路由
   router.post('/user', controller.users.saveUser);
