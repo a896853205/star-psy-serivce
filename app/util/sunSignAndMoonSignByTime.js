@@ -2,6 +2,7 @@ const debug = -1;
 const Today = new Date();
 const tY = Today.getFullYear();
 const tM = Today.getMonth();
+const tD = Today.getDate();
 // 农历数据信息
 const lunarInfo = [
   0x04bd8,

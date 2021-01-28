@@ -1,10 +1,12 @@
 const Controller = require('egg').Controller;
 const fs = require('fs');
+
 class ImageController extends Controller {
   async getFile() {
     const { ctx } = this;
     const { name } = ctx.query;
     ctx.set('content-type', 'image/jpeg');
+
     switch (name) {
       case 'title.png':
         ctx.body = fs.createReadStream('app/static/auth/title.png');
@@ -17,6 +19,8 @@ class ImageController extends Controller {
         return;
       case 'background.png':
         ctx.body = fs.createReadStream('app/static/des/background.png');
+        return;
+      default:
         return;
     }
   }
