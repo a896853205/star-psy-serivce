@@ -20,4 +20,6 @@ module.exports = app => {
   // 小程序路由
   router.post('/user', controller.users.saveUser);
   router.post('/feedback', controller.feedback.saveFeedback);
+
+  router.get('/image', controller.image.getFile);
 };
