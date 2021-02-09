@@ -64,8 +64,8 @@ class FeedbackService extends Service {
       // 获取最低评价数
       const lowSign = rows[0];
       const lowSignGroup = lowSign.groupMark.toFixed(2);
-      const lowSunSignName = lowSign.Description.sunSignI.name;
-      const lowMoonSignName = lowSign.Description.moonSignI.name;
+      const lowSunSignName = lowSign.description.sunSignI.name;
+      const lowMoonSignName = lowSign.description.moonSignI.name;
       lowEvaluation = {
         lowEvaluationMark: lowSignGroup,
         lowSunSignName,
@@ -75,8 +75,8 @@ class FeedbackService extends Service {
       // 获取最高评价数
       const topSign = rows[count.length - 1];
       const topSignGroup = topSign.groupMark.toFixed(2);
-      const topSunSignName = topSign.Description.sunSignI.name;
-      const topMoonSignName = topSign.Description.moonSignI.name;
+      const topSunSignName = topSign.description.sunSignI.name;
+      const topMoonSignName = topSign.description.moonSignI.name;
       topEvaluation = {
         topEvaluationMark: topSignGroup,
         topSunSignName,
@@ -232,11 +232,11 @@ class FeedbackService extends Service {
 
     if (count.length > 0) {
       rows.forEach(item => {
-        const sunSignName = item.Description.sunSignI.name;
+        const sunSignName = item.description.sunSignI.name;
         const chartItem = chartData.find(
           chartItem => chartItem.sunSign === sunSignName
         );
-        chartItem[item.Description.moonSignI.name] = item.groupMark.toFixed(2);
+        chartItem[item.description.moonSignI.name] = item.groupMark.toFixed(2);
       });
     }
 
