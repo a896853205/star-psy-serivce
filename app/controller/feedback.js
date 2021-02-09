@@ -26,7 +26,7 @@ class FeedbackController extends Controller {
 
     const { userId, descriptionId, mark } = ctx.request.body;
 
-    const feedbackResult = ctx.service.feedback.saveFeedback({
+    const feedbackResult = await ctx.service.feedback.saveFeedback({
       userId,
       descriptionId,
       mark,

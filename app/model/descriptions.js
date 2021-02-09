@@ -2,7 +2,7 @@ module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
 
   const Description = app.model.define(
-    'Descriptions',
+    'descriptions',
     {
       id: { type: INTEGER, primaryKey: true, autoIncrement: true },
       sunSign: INTEGER,
