@@ -10,8 +10,8 @@
   },
   "test": {
     "username": "root",
-    "password": "a896",
-    "database": "database_test",
+    "password": "sure",
+    "database": "star-psy",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "timezone": "+08:00"
