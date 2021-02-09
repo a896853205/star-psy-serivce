@@ -2,13 +2,13 @@ const Service = require('egg').Service;
 
 class DescriptionsService extends Service {
   async findDescriptionBySunSignAndMoonSign(sunSign, moonSign) {
-    return await this.ctx.model.descriptions.findOne({
+    return await this.ctx.model.Descriptions.findOne({
       where: { sunSign, moonSign },
     });
   }
 
   async descriptionUpdate(sunSignId, moonSignId, description) {
-    const updateResult = await this.ctx.model.descriptions.update(
+    const updateResult = await this.ctx.model.Descriptions.update(
       { description },
       {
         where: {
