@@ -20,6 +20,9 @@ class ImageController extends Controller {
       case 'background.png':
         ctx.body = fs.createReadStream('app/static/des/background.png');
         return;
+      case 'qrcode-background.png':
+        ctx.body = fs.createReadStream('app/static/background/qrcode-background.png');
+        return;
       default:
         return;
     }
