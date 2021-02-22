@@ -649,9 +649,9 @@ function calendar(y, m) {
 }
 
 function moonxzget(oldday, oldhour, oldmin, sunxz) {
-  /*牡羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯水瓶双鱼*/
+  /*牡羊金牛双子巨蟹狮子处女天秤天蝎射手摩羯水瓶双鱼*/
   let sxz;
-  sxz = '白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯水瓶双鱼';
+  sxz = '白羊金牛双子巨蟹狮子处女天秤天蝎射手摩羯水瓶双鱼';
   let add;
   if (
     oldday > 29 ||
@@ -778,7 +778,7 @@ function moonxzgeti(oldday, oldhour, oldmin, sunxz) {
   let v1;
   v1 = moonxzget(oldday, oldhour, oldmin, sunxz);
   let f1;
-  f1 = '白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯水瓶双鱼';
+  f1 = '白羊金牛双子巨蟹狮子处女天秤天蝎射手摩羯水瓶双鱼';
   let i;
   i = f1.indexOf(v1);
   let ii;
@@ -791,7 +791,7 @@ function moonxzgeti(oldday, oldhour, oldmin, sunxz) {
 }
 
 function getAstrov(m, d) {
-  return '魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯'.substr(
+  return '摩羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手摩羯'.substr(
     m * 2 - (d < '102223444433'.charAt(m - 1) - -19) * 2,
     2
   );
