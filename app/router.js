@@ -11,6 +11,7 @@ module.exports = app => {
 
   router.get('/', controller.home.index);
   router.get('/authortion', controller.managerUsers.authortion);
+  router.post('/sys/errorLog', controller.errors.errorLog);
 
   router.get('/description', jwt, controller.descriptions.descriptions);
   router.put('/description', jwt, controller.descriptions.update);
